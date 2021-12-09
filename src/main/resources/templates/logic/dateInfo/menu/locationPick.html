@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<style>
+.menuBox {
+	height: 300px;
+	width: 300px;
+}
+</style>
+<body>
+	<div class="wrapper">
+		<th:block th:include="fix/fixSideBar"></th:block>
+		<div id="content">
+			<!-- 사이드바 토글 버튼 -->
+			<nav class="navbar-light my-2">
+				<button type="button" id="sidebarCollapse" class="btn btn-danger">
+					<i class="navbar-toggler-icon"></i>
+				</button>
+			</nav>
+			<!-- 여기서 부터 내용 넣으세요 -->
+			<div>
+		<div class="py-5 d-flex justify-content-center">
+				<a th:href="@{/dateInfo/locSpot/1/{tour}/{page}(tour=${tour},page=1)}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center">서울 </a> <a
+						th:href="@{/dateInfo/locSpot/2/{tour}/{page}(tour=${tour},page=1)}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 인천 </a> <a
+						th:href="@{/dateInfo/locSpot/3/{tour}/{page}(tour=${tour},page=1)}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 대전 </a> <a
+						th:href="@{/dateInfo/locSpot/4/{tour}/{page}(tour=${tour},page=1)}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 대구 </a> <a
+						th:href="@{/dateInfo/locSpot/5/{tour}/{page}(tour=${tour},page=1)}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 광주 </a>
+				</div>
+				<div class="py-5 d-flex justify-content-center">
+					<a th:href="@{/dateInfo/locSpot/6/{tour}/{page}(tour=${tour},page=1)}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 부산 </a> <a
+						th:href="@{/dateInfo/locSpot/7/{tour}/{page}(tour=${tour},page=1)}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 울산</a> <a
+						th:href="@{/dateInfo/locSpot/8/{tour}/{page}(tour=${tour},page=1)}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 세종</a> <a
+						th:href="@{/dateInfo/locSpot/9/{tour}/{page}(tour=${tour},page=1)}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 경기도</a> <a
+						th:href="@{/dateInfo/locSpot/10/{tour}/{page}(tour=${tour},page=1)}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 강원도</a>
+				</div>
+				
+
+			</div>
+		</div>
+	</div>
+
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script>
+    $('#coupleMenuBtn').attr("aria-expanded", "true");
+    $('#coupleMenu').addClass("show");
+    $('#coupleMenu').children("li").eq(2).addClass("active");
+</script>
+</html>
+
+
+
+
+

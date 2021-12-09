@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+
+<body>
+	<div class="wrapper">
+		<th:block th:include="fix/fixSideBar"></th:block>
+		<div id="content">
+			<!-- 사이드바 토글 버튼 -->
+			<nav class="navbar-light my-2">
+				<button type="button" id="sidebarCollapse" class="btn btn-danger">
+					<i class="navbar-toggler-icon"></i>
+				</button>
+			</nav>
+			<!-- 여기서 부터 내용 넣으세요 -->
+			<div class="d-flex justify-content-center">
+			<div class="row mt-3">
+			
+				<form class="row" action="/couple/calenderUpdate" method="POST" >
+				<input type="hidden" th:value="${map.get('Cnum')}" name="Cnum" />
+					<div class="col-md-6">
+						<label  class="form-label">시작일정</label> <input
+							type="date"  th:value="${map.get('start')}"  class="form-control" name="start">
+					</div>
+					<div class="col-md-6">
+						<label for="sTime" class="form-label">시간</label> <input
+							type="time" class="form-control" id="sTime" name="sTime" th:value="${map.get('sTime')}">
+					</div>
+                    <div class="invalid-feedback"></div>
+                    
+					<div class="col-md-6 mt-2">
+						<label  class="form-label">마지막일정</label> <input
+							type="date" th:value="${map.get('end')}"  class="form-control" name="end" >
+					</div>
+					<div class="col-md-6 mt-2">
+						<label  for="eTime" class="form-label">시간</label> <input
+							type="time" class="form-control" id="eTime" name="eTime" th:value="${map.get('eTime')}">
+                    </div>
+				<div class="row mt-3 ">
+                <div class="mb-3">
+                    <label for="title" class="form-label"><h5>제목</h5></label>
+                    <div class="input-group">
+                    <input type="text" class="form-control" id="title" name="title" th:value="${map.get('title')}">
+                    <span class="ps-2">
+    				<input type="color"  class="form-control form-control-color" id="color" name="color" th:value="${map.get('color')}"></span></div>
+                    <div id="titleNum" class="form-text">0/20</div>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">내용</label>
+                    <textarea class="form-control" id="content1" rows="10"
+                              style="resize: none" name="content" th:text="${map.get('content')}" required></textarea>
+                    <div id="contentNum" class="form-text">0/1000</div>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="text-center">
+                    <a th:href="@{/couple/CalenderDetail/{Cnum}(Cnum=${map.get('Cnum')})}" class="btn btn-danger rounded-0">이전</a>
+                    <button type="submit" class="btn btn-danger rounded-0">수정</button>
+                                    </div>
+                </div>
+					</form>
+					
+					</div>
+			</div>
+		</div>
+	</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<link href="/css/calendar.css" rel="stylesheet" />
+<script>
+	$('#coupleMenuBtn').attr("aria-expanded", "true");
+	$('#coupleMenu').addClass("show");
+	$('#coupleMenu').children("li").eq(0).addClass("active");
+</script>
+<script>
+$('#color').on('change', function(){
+	console.log($(this).val());
+})
+//글자수 체킹 해주는거 및 유효성
+$('#content1').on("change keyup paste input", function () {
+    if ($(this).val().trim().length > 0) {
+        $(this).attr("class", "form-control is-valid");
+    } else {
+        $(this).nextAll('.invalid-feedback').text('한글자 이상 작성해주세요');
+        $(this).attr("class", "form-control is-invalid");
+    }
+    if ($(this).val().trim().length >= 1000) {
+        $(this).nextAll('.invalid-feedback').text('1000 글자 미만으로 작성해주세요');
+        $(this).attr("class", "form-control is-invalid");
+    }
+    $('#contentNum').text($(this).val().trim().length + "/1000");
+})
+
+$('#title').on("change keyup paste input", function () {
+    if ($(this).val().trim().length > 0) {
+        $(this).attr("class", "form-control is-valid");
+    } else {
+        $(this).nextAll('.invalid-feedback').text('한글자 이상 작성해주세요');
+        $(this).attr("class", "form-control is-invalid");
+    }
+    if ($(this).val().trim().length >= 20) {
+        $(this).nextAll('.invalid-feedback').text('20 글자 미만으로 작성해주세요');
+        $(this).attr("class", "form-control is-invalid");
+    }
+    $('#titleNum').text($(this).val().trim().length + "/20");
+})
+
+$("#sTime").change(function(){
+	$("#sTime").val($(this).val()+":00");
+});
+
+$("#eTime").change(function(){
+	$("#eTime").val($(this).val()+":00");
+	if($("#eTime").val()<$("#sTime").val()){
+		alert("마지막일정 시간이 시작시간보다 빠릅니다.");
+		$("#eTime").val("");
+	}
+});
+</script>
+</html>

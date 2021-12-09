@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+<div class="wrapper">
+    <th:block th:include="fix/fixSideBar"></th:block>
+    <div id="content">
+        <!-- 사이드바 토글 버튼 -->
+        <nav class="navbar-light my-2">
+            <button type="button" id="sidebarCollapse" class="btn btn-danger">
+                <i class="navbar-toggler-icon"></i>
+            </button>
+        </nav>
+		<div class="container">
+			<div class="col-6">
+				<h3 th:text="${room.roomName}">방이름</h3>
+			</div>
+			<div>
+				<div th:attr="roomNum=${room.roomNum}, roomName=${room.roomName}, userId=${room.id}, loginId=${loginId}" id="msgArea" class="col">
+				
+					<div th:each="chat : ${chatDTO}" class='col-6'>
+						<div th:if="${chat.id.toString().equals(loginId)}" class="alert alert-secondary"><b th:text="${chat.message}"></b></div>
+						<div th:unless="${chat.id.toString().equals(loginId)}" class="alert alert-warning"><b th:text="${chat.message}"></b></div>
+					</div>
+					
+				</div>
+				<div class="col-6">
+					<div class="input-group mb-3">
+						<input type="text" id="msg" class="form-control">
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-6"></div>
+		</div>
+		</div>
+		</div>
+	</body>
+	<th:block th:replace="fix/fixFooter.html"></th:block>
+	
+<script>
+let roomNum = $("#msgArea").attr("roomNum");
+let roomName = $("#msgArea").attr("roomName");
+let id = $("#msgArea").attr("userId");
+
+let loginId = $("#msgArea").attr("loginId");
+
+console.log(roomNum +" / " + roomName + " / " + id + " / " + loginId);
+
+	var sockJs = new SockJS("/stomp/chat");
+	//1. SockJS 가 내부에 들고있는 stomp 를 내어줌
+	var stomp = Stomp.over(sockJs);
+	
+	//2. 커넥션이 맺어지면 실행
+	stomp.connect({}, function(e){
+		console.log("STOMP Connection");
+		console.log(e);		
+		//4. subscribe(path, callback) 으로 메세지 받을 수 있음
+		stomp.subscribe("/sub/chat/room/" + roomNum, function(chat){
+			//console.log("콜백함수를 보자!!:: ",chat);
+			var content = JSON.parse(chat.body);
+			//console.log(content)
+			var writer = content.id;
+			
+			var str = '';
+			
+			if(writer == id){
+			 	str = "<div class='col-6'>";
+				str += "<div class='alert alert-secondary'>";
+				str += "<b>" + content.message + "</b>";
+				str += "</div></div>";
+				$("#msgArea").append(str);
+			}else{
+				str = "<div class='col-6'>";
+				str += "<div class='alert alert-warning'>";
+				str += "<b>" + content.message + "</b>";
+				str += "</div></div>";
+				$("#msgArea").append(str);
+			}
+		
+		});
+		//3. send(path, header, message) 로 메세지를 보낼 수 있음
+		 stomp.send('/pub/chat/enter', {},JSON.stringify({roomNum: roomNum, id: id, roomName: roomName}))	
+		});
+	
+	
+		$("#button-send").on("click",function(e){
+			var msg = document.getElementById("msg");
+			
+			console.log(id+ ":" + msg.value);
+			stomp.send('/pub/chat/message', {}, JSON.stringify({roomNum: roomNum, message: msg.value, id: id, roomName: roomName}));
+			msg.value='';
+		});
+
+</script>
+
+
+
+</html>

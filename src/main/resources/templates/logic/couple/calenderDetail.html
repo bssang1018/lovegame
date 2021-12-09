@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<style>
+.fc-sat{ color:#0000FF; }     /* 토요일 */
+   .fc-sun { color:#FF0000; }    /* 일요일 */
+</style>
+
+<body>
+	<div class="wrapper">
+		<th:block th:include="fix/fixSideBar"></th:block>
+		<div id="content">
+			<!-- 사이드바 토글 버튼 -->
+			<nav class="navbar-light my-2">
+				<button type="button" id="sidebarCollapse" class="btn btn-danger">
+					<i class="navbar-toggler-icon"></i>
+				</button>
+			</nav>
+			<!-- 여기서 부터 내용 넣으세요 -->
+			<div class="d-flex justify-content-center">
+			<div class="row mt-3">
+			
+				<form class="row" >
+					<div class="col-md-6">
+						<label  class="form-label">시작일정</label> <input
+							type="date"  th:value="${map.get('start')}"  class="form-control" name="start" readonly >
+					</div>
+					<div class="col-md-6">
+						<label for="sTime" class="form-label">시간</label> <input
+							type="time" class="form-control" id="sTime" name="sTime" th:value="${map.get('sTime')}" readonly>
+					</div>
+                    <div class="invalid-feedback"></div>
+                    
+					<div class="col-md-6 mt-2">
+						<label  class="form-label">마지막일정</label> <input
+							type="date" th:value="${map.get('end')}"  class="form-control" name="end" readonly >
+					</div>
+					<div class="col-md-6 mt-2">
+						<label  for="eTime" class="form-label">시간</label> <input
+							type="time" class="form-control" id="eTime" name="eTime" th:value="${map.get('eTime')}" readonly>
+                    </div>
+				<div class="row mt-3 ">
+                <div class="mb-3">
+                    <label for="title" class="form-label"><h5>제목</h5></label>
+                    <div class="input-group">
+                    <input type="text" class="form-control" id="title" name="title" th:value="${map.get('title')}" readonly>
+                    <span class="ps-2">
+    				<input type="color"  class="form-control form-control-color" id="color" name="color" th:value="${map.get('color')}" disabled></span></div>
+                    <div id="titleNum" class="form-text">0/20</div>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">내용</label>
+                    <textarea class="form-control" id="content1" rows="10"
+                              style="resize: none" name="content" th:text="${map.get('content')}" readonly></textarea>
+                    <div id="contentNum" class="form-text">0/1000</div>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="text-center">
+                    <a th:href="@{/couple/loveCalender}" class="btn btn-danger rounded-0">이전</a>
+                    <a th:href="@{/couple/calenderUpdateForm/{Cnum}(Cnum=${map.get('Cnum')})}" class="btn btn-danger rounded-0">수정</a>
+                    <a th:href="@{/couple/calenderDel/{Cnum}(Cnum=${map.get('Cnum')})}" class="btn btn-danger rounded-0">삭제</a>
+                                    </div>
+                </div>
+					</form>
+					
+					</div>
+			</div>
+		</div>
+	</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<link href="/css/calendar.css" rel="stylesheet" />
+<script>
+	$('#coupleMenuBtn').attr("aria-expanded", "true");
+	$('#coupleMenu').addClass("show");
+	$('#coupleMenu').children("li").eq(0).addClass("active");
+</script>
+<script>
+//글자수 체킹 해주는거 및 유효성
+    $('#contentNum').text($('#content1').val().trim().length + "/1000");
+
+    $('#titleNum').text($('#title').val().trim().length + "/20");
+</script>
+</html>

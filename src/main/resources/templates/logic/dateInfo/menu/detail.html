@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+
+<body>
+	<div class="wrapper">
+		<th:block th:include="fix/fixSideBar"></th:block>
+		<div id="content">
+			<!-- 사이드바 토글 버튼 -->
+			<nav class="navbar-light my-2">
+				<button type="button" id="sidebarCollapse" class="btn btn-danger">
+					<i class="navbar-toggler-icon"></i>
+				</button>
+			</nav>
+			<!-- 여기서 부터 내용 넣으세요 -->
+			<div class="container text-center " >
+						
+						
+						<h2 th:text="${map.get('title')}"  class="fw-bold"  ></h2>
+						<hr/>
+						<img onerror="src='/img/noListImg.jpg'" th:src="@{${map.get('firstimage')}}" class="img-fluid rounded-start" style="height: 600px; width: 600px">	
+							<hr/>
+							<h5 th:utext="${map.get('overview')}" ></h5>
+								<hr/>
+								<h5 th:text="${map.get('addr1')}"  ></h5>
+								<h5 th:text="${map.get('tel')}"  ></h5>
+				<hr/>
+				<div id="staticMap" style="width:400px;height:400px;margin:auto;" class="mt-2" th:attr="mapX=${map.get('mapx')},mapY=${map.get('mapy')}" ></div>
+			</div>
+		</div>
+	</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=96f67dd6c088728e30743d7db32a6789"></script>
+<script>
+	$('#coupleMenuBtn').attr("aria-expanded", "true");
+	$('#coupleMenu').addClass("show");
+	$('#coupleMenu').children("li").eq(2).addClass("active");
+	
+	let x = $('#staticMap').attr('mapX');
+	let y = $('#staticMap').attr('mapY');
+	
+	
+	
+	// 이미지 지도에서 마커가 표시될 위치입니다 
+	var markerPosition  = new kakao.maps.LatLng(y, x); 
+
+	// 이미지 지도에 표시할 마커입니다
+	// 이미지 지도에 표시할 마커는 Object 형태입니다
+	var marker = {
+	    position: markerPosition
+	};
+
+	var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
+	    staticMapOption = { 
+	        center: markerPosition, // 이미지 지도의 중심좌표
+	        level: 2, // 이미지 지도의 확대 레벨
+	        marker: marker // 이미지 지도에 표시할 마커 
+	    };    
+
+	// 이미지 지도를 생성합니다
+	var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+</script>
+</html>
+
+
+
+
+

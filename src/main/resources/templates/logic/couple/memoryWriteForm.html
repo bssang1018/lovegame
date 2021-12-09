@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+
+<body>
+	<div class="wrapper">
+		<th:block th:include="fix/fixSideBar"></th:block>
+		<div id="content">
+			<!-- 사이드바 토글 버튼 -->
+			<nav class="navbar-light my-2">
+				<button type="button" id="sidebarCollapse" class="btn btn-danger">
+					<i class="navbar-toggler-icon"></i>
+				</button>
+			</nav>
+			<!-- 여기서 부터 내용 넣으세요 -->
+			<div class="d-flex justify-content-center">
+			<div class="row mt-3">
+			
+				<form class="row" method="POST"  enctype="multipart/form-data">
+					<div class="col-md-6">
+						<label  class="form-label">시작일(*)</label>
+						<th:block th:if="${start eq null}">
+						<input	type="date"   class="form-control" id="start" name="start" required>
+						</th:block>
+						<th:block th:if="${start ne null}">
+						<input	type="date"   class="form-control" id="start" name="start" th:value="${start}" required>
+						</th:block>
+						
+					</div>
+					<div class="col-md-6">
+						<label for="sTime" class="form-label">시간</label> <input
+							type="time" class="form-control" id="sTime" name="sTime">
+					</div>
+                    <div class="invalid-feedback"></div>
+                    
+					<div class="col-md-6 mt-2">
+						<label  class="form-label">마지막일(*)</label> 
+						<th:block th:if="${end eq null}">
+						<input	type="date"  class="form-control" id="end" name="end" >
+						</th:block>
+						<th:block th:if="${end ne null}">
+						<input	type="date"  class="form-control" id="end" name="end" th:value="${end}">
+						</th:block>
+					</div>
+					<div class="col-md-6 mt-2">
+						<label  for="eTime" class="form-label">시간</label> <input
+							type="time" class="form-control" id="eTime" name="eTime" >
+                    </div>
+				<div class="row mt-3 ">
+                <div class="mb-3">
+                    <label for="title1" class="form-label"><h5>제목(*)</h5></label>
+                    <div class="input-group">
+                    <input type="text" class="form-control" id="title1" name="title">
+                    <span class="ps-2">
+    				<input type="color"  class="form-control form-control-color" id="color" name="color" value="#bb2d3b"></span></div>
+                    <div id="titleNum" class="form-text">0/20</div>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">내용(*)</label>
+                    <textarea class="form-control" id="content1" rows="10"
+                              style="resize: none" name="content"></textarea>
+                    <div id="contentNum" class="form-text">0/1000</div>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">이미지 등록(*)</label>
+                    <div id="drop" class="border w-100" style="height:210px; padding:3px">
+                        <div id="imgText" style="z-index: -1"
+                             class="h-100 w-100 d-flex align-items-center justify-content-center">
+                            <div class="text-muted" style="cursor: default;">
+                                이곳에 이미지를 끌어주세요!
+                            </div>
+                        </div>
+                        <div id="thumbnails" class="d-flex flex-row my-2" style="overflow: hidden"></div>
+                    </div>
+                    <input class="form-control" type="file" id="formFile"  onchange="input(this)">
+                </div>
+                
+                <div class="text-center">
+                    <a th:href="@{loveMemory}" class="btn btn-danger rounded-0">이전</a>
+                    <button type="button" class="btn btn-danger rounded-0" id="enter">등록</button>
+                </div>
+                </div>
+					</form>
+					
+					</div>
+			</div>
+		</div>
+	</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script>
+	$('#coupleMenuBtn').attr("aria-expanded", "true");
+	$('#coupleMenu').addClass("show");
+	$('#coupleMenu').children("li").eq(0).addClass("active");
+	
+	if ($('#start').val().trim().length > 0) {$('#start').attr("class", "form-control is-valid");}	
+	if ($('#end').val().trim().length > 0) {$('#end').attr("class", "form-control is-valid");}	
+	
+$("#sTime").change(function(){
+	$("#sTime").val($(this).val()+":00");
+});
+
+$("#eTime").change(function(){
+	$("#eTime").val($(this).val()+":00");
+});
+
+//date 체크
+$('input[name=start]').on('change',function(){
+	$(this).attr("class", "form-control is-valid");
+});
+
+$('input[name=end]').on('change',function(){
+	$(this).attr("class", "form-control is-valid");
+});
+//글자수 체킹 해주는거 및 유효성
+$('#content1').on("change keyup paste input", function () {
+    if ($(this).val().trim().length > 0) {
+        $(this).attr("class", "form-control is-valid");
+    } else {
+        $(this).nextAll('.invalid-feedback').text('한글자 이상 작성해주세요');
+        $(this).attr("class", "form-control is-invalid");
+    }
+    if ($(this).val().trim().length >= 1000) {
+        $(this).nextAll('.invalid-feedback').text('1000 글자 미만으로 작성해주세요');
+        $(this).attr("class", "form-control is-invalid");
+    }
+    $('#contentNum').text($(this).val().trim().length + "/1000");
+})
+
+$('#title1').on("change keyup paste input", function () {
+    if ($(this).val().trim().length > 0) {
+        $(this).attr("class", "form-control is-valid");
+    } else {
+        $(this).nextAll('.invalid-feedback').text('한글자 이상 작성해주세요');
+        $(this).attr("class", "form-control is-invalid");
+    }
+    if ($(this).val().trim().length >= 20) {
+        $(this).nextAll('.invalid-feedback').text('20 글자 미만으로 작성해주세요');
+        $(this).attr("class", "form-control is-invalid");
+    }
+    $('#titleNum').text($(this).val().trim().length + "/20");
+})
+
+let uploadFiles = [];
+$('#enter').attr("aria-expanded", "true");
+
+//드래그 이벤트 주기
+$(document).on("dragleave", "#drop", function (e) { //드래그 요소가 나갔을때
+    $(this).removeClass('bg-light');
+    e.stopPropagation();
+    e.preventDefault();
+}).on("dragover", "#drop", function (e) { // 드래그 요소가 들어왔을때
+    $(this).addClass('bg-light');
+    e.stopPropagation();
+    e.preventDefault();
+}).on('drop', "#drop", function (e) { //드래그한 항목을 떨어뜨렸을때
+    e.preventDefault();
+    $(this).removeClass('bg-light');
+    let fileForm = /(.*?)\.(jpg|jpeg|png|gif|bmp)$/;
+    let files = e.originalEvent.dataTransfer.files;
+    for (let i = 0; i < files.length; i++) {
+        let file = files[i];
+        if (file.name.match(fileForm)) {
+            $('#imgText').remove();
+            let size = uploadFiles.push(file); //업로드 목록에 추가
+            preview(file, size - 1); //미리보기 만들기
+        } else {
+            alert("이미지 파일만 등록해주세요!")
+            $('#thumbnails').empty();
+            return;
+        }
+    }
+});
+
+console.log($(document.querySelector('input[type=file]')));
+function input(e){
+	    let fileForm = /(.*?)\.(jpg|jpeg|png|gif|bmp)$/;
+	    let files = e.files;
+	console.log($(e));
+	    for (let i = 0; i < files.length; i++) {
+	        let file = files[i];
+	        if (file.name.match(fileForm)) {
+	            $('#imgText').remove();
+	            let size = uploadFiles.push(file); //업로드 목록에 추가
+	            preview(file, size - 1); //미리보기 만들기
+	        } else {
+	            alert("이미지 파일만 등록해주세요!")
+	            $('#thumbnails').empty();
+	            return;
+	        }
+	    }
+}
+
+// 이미지 삭제
+$(document).on("click", ".close", function (e) {
+    let idx = $(this).attr('data-idx');
+    uploadFiles[idx] = 'disable'; //삭제시 자기 배열에 disable 첨가
+    $(this).remove(); //이미지 삭제
+});
+
+// 이미지 띄우기라는데 이해안됨 걍 복붙 ㅅㄱ
+function preview(file, idx) {
+    let reader = new FileReader();
+    reader.onload = (function (f, idx) {
+        return function (e) {
+            let content = "";
+            content += '<div class="d-flex flex-column close" data-idx="' + idx + '" style="cursor: pointer">';
+            content += '<div class="thumb">';
+            content += '<img style="width: 150px;height: 150px;" class="img-fluid img-count" src="' + e.target.result + '" title="' + escape(f.name) + '"/>';
+            content += '</div>';
+            content += '<div class="text-center">';
+            content += '<i class="bi bi-x-lg fs-3"></i>';
+            content += '</div>';
+            content += '</div>';
+            $("#thumbnails").append(content);
+        };
+    })(file, idx);
+    reader.readAsDataURL(file);
+}
+
+//글쓰기
+$(document).on('click', '#enter', function () {
+    let check = 0;
+    $.each(uploadFiles, function (i, file) {
+        if (file != 'disable') {
+            check++;
+        }
+    });
+    if (check > 10) {
+        alert('이미지는 9장까지만 등록가능합니다!')
+    } else {
+        if (check > 0) {
+            let title = $('#title1').val();
+            let contents = $('#content1').val();
+            let start = $('#start').val();
+            let sTime = $('#sTime').val();
+            let end = $('#end').val();
+            let eTime = $('#eTime').val();
+            let color = $('#color').val();
+            if ($('#title1').hasClass('is-valid') && $('#content1').hasClass('is-valid') && $('#start').hasClass('is-valid')) {
+                //LoadingWithMask();
+                let formData = new FormData();
+                // 파일 넣기
+                $.each(uploadFiles, function (i, file) {
+                    if (file != 'disable') {
+                        formData.append('files', file, file.name);
+                    }
+                });
+                // 파라미터 넣기
+                formData.append("title", title);
+                formData.append("content", contents);
+                formData.append("start",start);
+                formData.append("end",end);
+                if($('#sTime').val().trim().length>0){
+                    formData.append("sTime",sTime);
+                     }
+                    if($('#eTime').val().trim().length>0){
+                    formData.append("eTime",eTime);
+                    }
+                formData.append("color", color);
+                $.ajax({
+                    url: '/couple/memoryWrite',
+                    enctype: 'multipart/form-data',
+                    data: formData,
+                    type: 'post',
+                    contentType: false,
+                    processData: false,
+                    success: function (suc) {
+                        //closeLoadingWithMask();
+                        alert("등록 성공!")
+                        location.href = '/couple/memoryDetail/' + suc;
+                    }
+                });
+            } else {
+                if (title == "") {
+                    $('#title1').nextAll('.invalid-feedback').text('한글자 이상 작성해주세요');
+                    $('#title1').attr('class', 'form-control is-invalid');
+                }
+                if (contents == "") {
+                    $('#content1').nextAll('.invalid-feedback').text('한글자 이상 작성해주세요');
+                    $('#content1').attr('class', 'form-control is-invalid');
+                }
+                if (start == "") {
+                    $('#start').attr('class', 'form-control is-invalid');
+                }
+            }
+        } else {
+            alert("이미지를 등록해주세요!")
+        }
+    }
+})
+
+
+</script>
+</html>

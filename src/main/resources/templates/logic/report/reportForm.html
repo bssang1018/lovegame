@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+<div class="wrapper">
+    <th:block th:include="fix/fixSideBar"></th:block>
+    <div id="content">
+        <!-- 사이드바 토글 버튼 -->
+        <nav class="navbar-light my-2">
+            <button type="button" id="sidebarCollapse" class="btn btn-danger">
+                <i class="navbar-toggler-icon"></i>
+            </button>
+        </nav>
+        <!-- 여기서 부터 내용 넣으세요 -->
+        <div class="d-flex justify-content-center">
+            <form th:action="@{/report}" class="w-75 bg-white mt-2" id="reportForm" method="post">
+                <h3>신고하기</h3>
+                <h6 class="text-muted">사유를 상세히 적어주세요! 자세히 작성하지 않으면 조치가 이루어지지 않습니다!
+                    <br/>허위신고는 뚝배기가 날아갈수 있습니다 ^^</h6>
+                <div class="mb-3">
+                    <label for="reportId" class="form-label">신고할 ID</label>
+                    <input th:value="${id}" name="reportId" type="text" class="form-control" id="reportId" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="reason" class="form-label">사유(*)</label>
+                    <textarea class="form-control" id="reason" rows="10"
+                              style="resize: none" name="reason"></textarea>
+                    <div id="reasonNum" class="form-text">0/1000</div>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="text-center">
+                    <button id="reportBtn" type="button" class="btn btn-danger rounded-0">신고하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script>
+    $('#reportBtn').on('click', function () {
+        if ($('#reason').val().trim().length < 10) {
+            alert('10자 이상 입력해주세요!')
+        } else if ($('#reason').val().trim().length >= 1000) {
+            alert('1000자 미만 입력 가능합니다!')
+        } else {
+            alert("신고 접수 완료!");
+            $('#reportForm').submit();
+        }
+    })
+    $('#reason').on("change keyup paste input", function () {
+        $('#reasonNum').text($(this).val().trim().length + "/1000");
+    })
+</script>
+</html>

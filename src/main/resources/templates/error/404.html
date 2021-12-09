@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+<img src="/img/love.jpg" id="bg" class="img-fluid">
+<div class="d-flex justify-content-center container h-100">
+    <div class="w-75 border p-3 bg-white shadow rounded align-self-center">
+        <div class="d-inline-flex">
+            <img class="img-fluid" src="/img/love-icon.png" style="width: 60px;height: 60px">
+            <h1 class="ms-2 fw-bold">Lovegame</h1>
+        </div>
+        <h3>
+            죄송합니다.<br/>
+            요청하신 페이지를 찾을 수 없습니다.<br/>
+            방문하시려는 페이지의 주소가 잘못 입력되었거나,
+            페이지의 주소가 변경 혹은 삭제되어 요청하신 페이지를 찾을 수 없습니다.<br/>
+            입력하신 주소가 정확한지 다시 한번 확인해 주시기 바랍니다.<br/>
+            관련 문의사항은 러브게임 고객센터에 알려주시면 친절하게 안내해 드리겠습니다.<br/>
+            감사합니다.
+        </h3>
+        <div class="text-center">
+            <a class="btn btn-danger rounded-0" th:href="@{/main}">메인으로</a>
+        </div>
+    </div>
+</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+<div class="wrapper">
+    <th:block th:include="fix/fixSideBar"></th:block>
+    <div id="content">
+        <!-- 사이드바 토글 버튼 -->
+        <nav class="navbar-light my-2">
+            <button type="button" id="sidebarCollapse" class="btn btn-danger">
+                <i class="navbar-toggler-icon"></i>
+            </button>
+        </nav>
+        <!-- 여기서 부터 내용 넣으세요 -->
+        여긴 맛집
+    </div>
+</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script>
+    $('#coupleMenuBtn').attr("aria-expanded", "true");
+    $('#coupleMenu').addClass("show");
+    $('#coupleMenu').children("li").eq(2).addClass("active");
+</script>
+</html>
+
+
+
+
+

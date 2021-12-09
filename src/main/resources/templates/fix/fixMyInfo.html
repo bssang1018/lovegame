@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <button type="button" id="sidebarCollapse" class="btn btn-danger">
+            <i class="navbar-toggler-icon"></i>
+        </button>
+        <button class="btn btn-danger d-inline-block d-lg-none ml-auto rounded-0" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span>내 정보</span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav navbar-nav m-lg-auto">
+                <li class="nav-item mx-2 fs-5">
+                    <a class="nav-link" th:href="@{/myInfo/proFile}">내 프로필</a>
+                </li>
+                <li class="nav-item mx-2 fs-5">
+                    <a class="nav-link" th:href="@{/myInfo/goodList(division='my')}">관심리스트</a>
+                </li>
+                <li class="nav-item mx-2 fs-5">
+                    <a class="nav-link" th:href="@{/myInfo/pwChangeForm}">비밀번호변경</a>
+                </li>
+                <li class="nav-item mx-2 fs-5">
+                    <a class="nav-link" th:href="@{/myInfo/boardList/1}">작성한 일상, 기록</a>
+                </li>
+                <li class="nav-item mx-2 fs-5">
+                    <a class="nav-link" th:href="@{/myInfo/memberDrop}">회원탈퇴</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+</html>

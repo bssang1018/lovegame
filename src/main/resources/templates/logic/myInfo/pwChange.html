@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+<div class="wrapper">
+    <th:block th:include="fix/fixSideBar"></th:block>
+    <div id="content">
+        <th:block th:include="fix/fixMyInfo"></th:block>
+        <!-- 여기서 부터 내용 넣으세요 -->
+        <div class="d-flex justify-content-center">
+            <form th:action="@{/myInfo/pwChange}" class="w-50" method="post" id="pwChangeForm">
+                <h3>비밀번호 변경</h3>
+                <div class="mb-3">
+                    <label for="id" class="form-label">아이디</label>
+                    <input type="text" class="form-control" id="id" th:value="${session.loginId}" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="pw" class="form-label">현재 비밀번호</label>
+                    <input type="password" class="form-control" id="pw" name="pw">
+                </div>
+                <div class="mb-3">
+                    <label for="changePw" class="form-label">변경할 비밀번호</label>
+                    <input type="password" class="form-control" id="changePw" name="changePw">
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="mb-3">
+                    <label for="changePwCheck" class="form-label">비밀번호확인</label>
+                    <input type="password" class="form-control" id="changePwCheck">
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div th:if="${suc eq false}" class="alert alert-danger d-flex align-items-center" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                        <use xlink:href="#exclamation-triangle-fill"/>
+                    </svg>
+                    <div>비밀번호가 틀립니다 다시 입력해주세요</div>
+                </div>
+                <div class="text-center">
+                    <button id="pwChangeBtn" type="button" class="btn btn-danger rounded-0">변경</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script>
+    $("input[name='changePw']").on("change keyup paste input", function () {
+        if ($(this).val().trim().length > 8) {
+            $(this).nextAll(".valid-feedback").text("사용 가능합니다");
+            $(this).attr("class", "form-control is-valid");
+        } else {
+            $(this).nextAll(".invalid-feedback").text("8자 이상 입력해주세요");
+            $(this).attr("class", "form-control is-invalid");
+        }
+    })
+    $("#changePwCheck").on("change keyup paste input", function () {
+        if ($(this).val() == $("input[name='changePw']").val()) {
+            $(this).nextAll(".valid-feedback").text("동일합니다");
+            $(this).attr("class", "form-control is-valid");
+        } else {
+            $(this).nextAll(".invalid-feedback").text("동일하게 입력해주세요");
+            $(this).attr("class", "form-control is-invalid");
+        }
+    })
+    $("#pwChangeBtn").on("click", function () {
+        if ($("input[name='changePw']").hasClass("is-valid") && $("#changePwCheck").hasClass("is-valid")) {
+            $("#pwChangeForm").submit();
+        }
+        if ($("input[name='changePw']").val().trim() == "") {
+            $("input[name='changePw']").nextAll(".invalid-feedback").text("8자 이상 입력해주세요");
+            $("input[name='changePw']").attr("class", "form-control is-invalid");
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<style>
+.menuBox {
+	height: 300px;
+	width: 300px;
+}
+</style>
+<body>
+	<div class="wrapper">
+		<th:block th:include="fix/fixSideBar"></th:block>
+		<div id="content">
+			<!-- 사이드바 토글 버튼 -->
+			<nav class="navbar-light my-2">
+				<button type="button" id="sidebarCollapse" class="btn btn-danger">
+					<i class="navbar-toggler-icon"></i>
+				</button>
+			</nav>
+			<!-- 여기서 부터 내용 넣으세요 -->
+			<div>
+					<div class="py-4 d-flex justify-content-center">
+					<a th:href="@{/dateInfo/tourMenu/12}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 관광지 </a> <a
+						th:href="@{/dateInfo/tourMenu/14}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 문화시설 </a> <a
+						th:href="@{/dateInfo/tourMenu/5}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 축제/공연/행사 </a> <a
+						th:href="@{/dateInfo/tourMenu/25}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 여행코스 </a>
+				</div>
+				<div class="py-4 d-flex justify-content-center">
+					<a th:href="@{/dateInfo/tourMenu/28}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 레포츠 </a> <a
+						th:href="@{/dateInfo/tourMenu/32}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center"> 숙박 </a> <a
+						th:href="@{/dateInfo/tourMenu/38}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center">쇼핑 </a> <a
+						th:href="@{/dateInfo/tourMenu/39}" class="fs-2 btn btn-outline-danger border menuBox mx-2 d-flex justify-content-center align-items-center">음식 </a>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script>
+    $('#coupleMenuBtn').attr("aria-expanded", "true");
+    $('#coupleMenu').addClass("show");
+    $('#coupleMenu').children("li").eq(2).addClass("active");
+</script>
+</html>
+
+
+
+
+

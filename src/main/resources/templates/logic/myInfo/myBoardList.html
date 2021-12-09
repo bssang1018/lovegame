@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+<div class="wrapper">
+    <th:block th:include="fix/fixSideBar"></th:block>
+    <div id="content">
+        <th:block th:include="fix/fixMyInfo"></th:block>
+        <!-- 여기서 부터 내용 넣으세요 -->
+        <div class="container">
+            <th:block th:if="${#lists.size(map.get('list')) > 0}">
+                <div class="d-flex justify-content-center">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th class="col-6">제목</th>
+                            <th class="col-2">작성일</th>
+                            <th class="col-1">조회수</th>
+                            <th class="col-1">추천수</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="dto : ${map.get('list')}">
+                            <td class="py-2"><a class="align-middle target boardDetail"
+                                                th:href="@{/loveBoard/boardDetail/{boardNum}/{page}/{division}(division=${map.division},boardNum=${dto.boardNum},page=${page})}"
+                                                th:text="${dto.title}"></a></td>
+                            <td th:text="${#strings.substring(dto.date,0,10)}" class="align-middle"></td>
+                            <td th:text="${dto.boardHit}" class="align-middle"></td>
+                            <td th:text="${dto.goodCount}" class="align-middle"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:if="${map.get('startPage') ne 1}">
+                        <a aria-label="Previous" class="page-link rounded-0"
+                           th:href="@{/myInfo/boardList/{page}(page=${map.get('startPage') - 1})}">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <th:block th:each="num: ${#numbers.sequence(map.get('startPage'),map.get('endPage'))}">
+                        <li th:if="${num ne map.get('currPage')}" class="page-item">
+                            <a th:text="${num}" class="page-link rounded-0"
+                               th:href="@{/myInfo/boardList/{page}(page=${num})}"></a>
+                        </li>
+                        <li th:if="${num eq map.get('currPage')}" class="page-item active">
+                            <a th:text="${num}" class="page-link rounded-0"></a>
+                        </li>
+                    </th:block>
+                    <li class="page-item" th:if="${map.get('totalPage') ne map.get('endPage')}">
+                        <a class="page-link rounded-0"
+                           th:href="@{/myInfo/boardList/{page}(page=${map.get('endPage') + 1})}"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </th:block>
+            <th:block th:if="${#lists.size(map.get('list')) < 0}">
+                <div class="text-center text-muted">작성한 게시글이 없습니다</div>
+            </th:block>
+        </div>
+    </div>
+</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+</html>

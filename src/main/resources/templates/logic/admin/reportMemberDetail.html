@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+	<div class="wrapper">
+		<th:block th:include="fix/fixSideBar"></th:block>
+		<div id="content">
+			<!-- 사이드바 토글 버튼 -->
+			<nav class="navbar-light my-2">
+				<button type="button" id="sidebarCollapse" class="btn btn-danger">
+					<i class="navbar-toggler-icon"></i>
+				</button>
+			</nav>
+			<!-- 여기서 부터 내용 넣으세요 -->
+			<div class="d-flex justify-content-center">
+				<div class="row mt-3">
+
+					<form class="row">
+						<div class="col-md-6">
+							<label class="form-label">신고받은 회원</label> <input type="text" th:value="${map.get(0).id}"
+								 class="form-control" readonly>
+						</div>
+						<div class="col-md-6">
+							<label class="form-label">신고한 회원</label> <input type="text" th:value="${map.get(0).reporter}"
+								class="form-control"  readonly>
+						</div>
+
+						<div class="row mt-1 ">
+						<div class="mt-2">
+							<label class="form-label">신고일</label> <input type="date"
+							th:value="${#strings.substring(map.get(0).date,0,10)}"
+								class="form-control" readonly>
+						</div>
+							<div class="mt-3 mb-4">
+								<label for="content" class="form-label">신고 이유</label>
+								<textarea class="form-control" rows="10" style="resize: none" th:text="${map.get(0).reason}" 
+									name="content" readonly></textarea>
+							</div>
+							<hr/>
+							<div class="mt-2 mb-3">
+								<label for="content" class="form-label">신고 처리</label>
+								<th:block th:if="${map.get(0).answer ne null}">
+								<textarea class="form-control" rows="10" style="resize: none" th:text="${map.get(0).answer}" 
+									id="answer" name="content" readonly></textarea>
+							</th:block>
+							<th:block th:if="${map.get(0).answer eq null}">
+								<textarea class="form-control" rows="10" style="resize: none"
+									id="answer" name="content"></textarea>
+							</th:block>
+							</div>
+							
+							<div class="text-center">
+								<a th:href="@{/admin/reportMember/1}"
+									class="btn btn-danger rounded-0">이전</a>
+							<th:block th:if="${map.get(0).answer eq null}"><button
+								id="enter"	class="btn btn-danger rounded-0" th:value="${map.get(0).reportNum}">답변등록</button>		
+							</th:block>
+							<th:block th:if="${map.get(0).answer ne null}"><button
+								id="bye"	class="btn btn-danger rounded-0" th:value="${map.get(0).id}">회원정지</button>		
+							</th:block>
+							</div>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<link href="/css/calendar.css" rel="stylesheet" />
+<script>
+	$('#coupleMenuBtn').attr("aria-expanded", "true");
+	$('#coupleMenu').addClass("show");
+	$('#coupleMenu').children("li").eq(0).addClass("active");
+	
+	
+	$(document).on('click', '#enter', function () {
+		  let answer = $('#answer').val();
+		  let rNum = $('#enter').val();
+		  
+		  if(confirm( '답변을 등록하시겠습니까? 답변 후 수정이 불가능하니 확인 후 진행해주세요.')){
+		  
+		 if( $('#answer').val().trim().length > 0){
+			 let formData = new FormData();
+			 formData.append("answer", answer);
+			 formData.append("rNum", rNum);
+			 $.ajax({
+                 url: '/admin/answerEnter',
+                 data: formData,
+                 type: 'post',
+                 contentType: false,
+                 processData: false,
+                 success: function (suc) {
+                     alert("등록 완료")
+                     location.href = '/admin/reportMemberDetail/' + suc;
+                 }
+             });
+		 } else{
+			 alert('한글자 이상 작성 해주세요.');
+		 }
+
+		};
+		 
+	});
+	
+	$(document).on('click', '#bye', function () {
+		  let id = $('#bye').val();
+		  if(confirm( id+' 회원을 정지 시키겠습니까? 확인 후 진행해주세요.')){
+		  
+			 let formData = new FormData();
+			 formData.append("id", id);
+			 $.ajax({
+               url: '/admin/bye',
+               data: formData,
+               type: 'post',
+               contentType: false,
+               processData: false,
+               success: function (suc) {
+                   alert("탈퇴")
+                   location.href = '/admin/reportMemberDetail/' + suc;
+               }
+		});
+		  }
+		 
+	});
+</script>
+</html>

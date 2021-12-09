@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+	<div class="wrapper">
+		<th:block th:include="fix/fixSideBar"></th:block>
+		<div id="content">
+			<!-- 사이드바 토글 버튼 -->
+			<nav class="navbar-light my-2">
+				<button type="button" id="sidebarCollapse" class="btn btn-danger">
+					<i class="navbar-toggler-icon"></i>
+				</button>
+			</nav>
+			<!-- 여기서 부터 내용 넣으세요 -->
+			<div class="container">
+				<h3>데이트정보</h3>
+				<p class="text-muted">소중한 사람과 행복한 시간을 보내세요!</p>
+				<!-- 카드 -->
+				<div class="d-flex justify-content-center">
+					<div>
+						<!-- 카드를 가운데로 유지 -->
+						<div th:each="map : ${list}" class="card mb-3" style="width: 900px; max-height: 500px">
+							<a class="row g-0"  th:href="@{/dateInfo/infoDetail/{contentid}/{contenttypeid}(contentid=${map.get('contentid')},contenttypeid=${map.get('contenttypeid')})}">
+								<div class="col-md-4">
+									<img onerror="src='/img/noListImg.jpg'" th:src="@{${map.get('firstimage')}}" class="img-fluid rounded-start" style="height: 200px; width: 300px">	
+								</div>
+								<div class="col-md-8">
+									<div class="card-body">
+										<h5 th:text="${map.get('title')}" class="card-title"></h5>
+										<p th:text="${map.get('addr1')}" class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<ul class="pagination justify-content-center">
+                <li class="page-item" th:if="${map.get('startPage') ne 1}">
+                    <a aria-label="Previous" class="page-link rounded-0"
+                       th:href="@{{page}(page=${map.get('startPage') - 1})}">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <th:block th:each="num: ${#numbers.sequence(map.get('startPage'),map.get('endPage'))}">
+                    <li th:if="${num ne map.get('currPage')}" class="page-item">
+                        <a th:text="${num}" class="page-link rounded-0"
+                           th:href="@{{page}(page=${num})}"></a>
+                    </li>
+                    <li th:if="${num eq map.get('currPage')}" class="page-item active">
+                        <a th:text="${num}" class="page-link rounded-0"></a>
+                    </li>
+                </th:block>
+                <li class="page-item" th:if="${map.get('totalPage') ne map.get('endPage')}">
+                    <a class="page-link rounded-0"
+                       th:href="@{{page}(page=${map.get('endPage') + 1})}"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+			</div>
+		</div>
+	</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script>
+	$('#coupleMenuBtn').attr("aria-expanded", "true");
+	$('#coupleMenu').addClass("show");
+	$('#coupleMenu').children("li").eq(2).addClass("active");
+</script>
+</html>
+
+
+
+
+

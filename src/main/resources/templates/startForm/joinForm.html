@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead"></th:block>
+<body>
+<img src="/img/love.jpg" id="bg" class="img-fluid">
+<div class="d-flex justify-content-center container h-100">
+    <form th:action="@{/member/join}" class="w-75 border p-3 bg-white shadow rounded align-self-center" method="post"
+          id="joinForm">
+        <div class="d-inline-flex">
+            <img class="img-fluid" src="/img/love-icon.png" style="width: 60px;height: 60px">
+            <h1 class="ms-2 fw-bold">Lovegame</h1>
+        </div>
+        <h4>회원가입</h4>
+        <div class="mb-3">
+            <label for="id" class="form-label">아이디(*)</label>
+            <input type="text" class="form-control nullCheck" id="id" name="id">
+            <div class="valid-feedback"></div>
+            <div class="invalid-feedback"></div>
+            <button id="idCheckBtn" class="btn btn-danger btn-sm rounded-0 mt-2" type="button">중복확인</button>
+        </div>
+        <div class="mb-3">
+            <label for="pw" class="form-label">비밀번호(*)</label>
+            <input type="password" class="form-control nullCheck" id="pw" name="pw">
+            <div class="valid-feedback"></div>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3">
+            <label for="pwCheck" class="form-label">비밀번호확인(*)</label>
+            <input type="password" class="form-control nullCheck" id="pwCheck">
+            <div class="valid-feedback"></div>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">이메일(*)</label>
+            <input type="text" class="form-control nullCheck" id="email" name="email" readonly>
+            <div class="valid-feedback"></div>
+            <div class="invalid-feedback"></div>
+            <button id="emailCheckBtn" class="btn btn-danger btn-sm rounded-0 mt-2" type="button"
+                    data-bs-target="#emailModal" data-bs-toggle="modal">이메일인증
+            </button>
+        </div>
+        <div class="form-label">성별</div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" id="men" value="Y" checked>
+            <label class="form-check-label" for="men">남</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" id="girl" value="N">
+            <label class="form-check-label" for="girl">여</label>
+        </div>
+        <div class="text-center mt-3">
+            <a th:href="@{/}" class="btn btn-danger rounded-0">이전으로</a>
+            <button id="joinBtn" type="button" class="btn btn-danger rounded-0">회원가입</button>
+        </div>
+    </form>
+</div>
+<!-- 이메일 인증 팝업창 -->
+<div class="modal fade" id="emailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">이메일 인증</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <label for="code" class="form-label">이메일</label>
+                    <input class="form-control" type="text" id="emailSender" name="emailSender"
+                           placeholder="이메일을 올바르게 입력해주세요">
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback">이메일 형태만 입력해주세요</div>
+                    <button id="emailSendBtn" type="button" class="btn btn-danger btn-sm mt-2 rounded-0">전송
+                    </button>
+                </div>
+                <div>
+                    <label for="code" class="form-label">인증코드</label>
+                    <input class="form-control" type="text" id="code" name="code">
+                    <div class="invalid-feedback">코드가 틀립니다</div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button id="close" type="button" class="btn btn-secondary rounded-0" data-bs-dismiss="modal">닫기
+                </button>
+                <button id="emailNumCheckBtn" type="button" class="btn btn-danger rounded-0">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<th:block th:include="fix/fixFooter"></th:block>
+<script th:src="@{/js/joinForm.js}"></script>
+<script th:src="@{/js/loading.js}"></script>
+</html>

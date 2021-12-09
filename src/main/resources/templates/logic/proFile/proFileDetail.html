@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+<div class="wrapper">
+    <th:block th:include="fix/fixSideBar"></th:block>
+    <div id="content">
+        <!-- 여기서 부터 내용 넣으세요 -->
+        <div class="d-flex justify-content-center">
+            <div class="w-75 bg-white">
+                <div class="text-center mt-1">
+                    <th:block th:if="${dto ne null}">
+                        <img th:src="${dto.imgPath}"
+                             onerror="src='/img/noImg.png'"
+                             class="rounded-circle border img-fluid proFileImg"
+                             style="width: 400px;height: 400px">
+                    </th:block>
+                    <th:block th:if="${dto eq null}">
+                        <img th:src="@{/img/noImg.png}"
+                             onerror="src='/img/noImg.png'"
+                             class="rounded-circle border img-fluid proFileImg"
+                             style="width: 400px;height: 400px">
+                    </th:block>
+                </div>
+                <th:block th:if="${dto eq null}">
+                    <h3 class="text-center" th:text="${proFileId}"></h3>
+                    <div class="text-center mt-2">
+                        <div th:attr="goodCheck=${goodCheck}" class="good btn btn-outline-danger rounded-0"><i
+                                class="bi bi-emoji-heart-eyes me-1"></i>관심
+                        </div>
+                        <a class="btn btn-danger rounded-0">
+                            <i class="bi bi-chat-dots me-1"></i>러브톡
+                        </a>
+                    </div>
+                </th:block>
+                <th:block th:if="${dto ne null}">
+                    <h3 class="text-center" th:text="${dto.id}"></h3>
+                    <h5 th:if="${dto.name ne null}" th:text="${dto.name} +'('+${dto.age} + ')'"
+                        class="text-center mt-2"></h5>
+                    <div class="text-center mt-2">
+                        <div th:attr="goodCheck=${goodCheck}" class="good btn btn-outline-danger rounded-0">
+                            <i class="bi bi-emoji-heart-eyes me-1"></i>관심
+                        </div>
+                        <a th:href="@{/chat/chatCon(person=${dto.id})}" class="btn btn-danger rounded-0">
+                            <i class="bi bi-chat-dots me-1"></i>러브톡
+                        </a>
+                    </div>
+                    <hr/>
+                    <div class="mb-3 text-center mt-2" th:if="${dto ne null}">
+                        <th:block th:if="${dto.intro ne null}">
+                            <h3>자기소개</h3>
+                            <p class="text-dark" th:text="${dto.intro}"></p>
+                        </th:block>
+                    </div>
+                    <th:block th:if="${dto ne null}">
+                        <div class="mb-3 text-center mt-2">
+                            <div th:if="${dto.hobby ne null}">
+                                <h3>관심사</h3>
+                            </div>
+                            <th:block th:each="hobby : ${#strings.arraySplit(dto.hobby,',')}">
+                                <button class="btn btn-danger rounded-0 my-1" th:text="${hobby}" disabled></button>
+                            </th:block>
+                        </div>
+                    </th:block>
+                </th:block>
+                <th:block th:if="${dto eq null}">
+                    <p class="text-center text-muted mt-2">프로필이 등록되지 않았습니다</p>
+                </th:block>
+                <div th:if="${#arrays.length(boardList) > 0}" class="mb-3 mt-2">
+                    <h3 class="mb-3 text-center">일상, 기록</h3>
+                    <div th:each="list : ${boardList}" class="d-flex justify-content-center">
+                        <div class="card mt-2" style="width: 650px">
+                            <a th:href="@{/loveBoard/boardDetail/{boardNum}/1/all(boardNum=${list.boardNum})}">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img th:src="${list.path}" class="img-fluid rounded-start w-100"
+                                             style="height: 200px;">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 th:text="${list.title}" class="card-title titleTarget"></h5>
+                                            <p th:text="${list.content}" class="card-text targets"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:if="${dto eq null}">
+    <input th:attr="divisionNum=${proFileId},goodDivision='people'" type="hidden"
+           class='divisionNum'>
+</th:block>
+<th:block th:if="${dto ne null}">
+    <input th:attr="divisionNum=${dto.id},goodDivision='people'" type="hidden"
+           class='divisionNum'>
+</th:block>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script th:src="@{/js/good.js}"></script>
+</html>

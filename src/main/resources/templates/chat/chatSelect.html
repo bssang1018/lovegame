@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+<div class="wrapper">
+    <th:block th:include="fix/fixSideBar"></th:block>
+    <div id="content">
+        <!-- 사이드바 토글 버튼 -->
+        <nav class="navbar-light my-2">
+            <button type="button" id="sidebarCollapse" class="btn btn-danger">
+                <i class="navbar-toggler-icon"></i>
+            </button>
+        </nav>
+       
+		<div class="container" style="height: 700px;">
+
+		<div class="row" style="border: solid #CD7070 2px; height:100%;">
+			
+			<div class="col-3" style="border-right: solid #CD7070 2px; padding:0px;">
+				
+				<div class="row justify-content-md-center">
+				
+					<div class="col-md-auto">
+						<h4 th:text="${loginId}" style="margin-top: 30px; margin-bottom: 0px; padding-bottom: 30px; text-align: center; font-weight: bold;">내 아이디</h4>
+					</div>
+					
+					<div class="col-md-auto align-self-center">
+						 <button type="button" class="btn btn-danger rounded-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
+			                <i class="bi bi-chat-dots"></i>
+                			<span class="visually-hidden">Button</span>
+              			</button>
+					</div>
+					
+				</div>
+				
+		
+				
+				<div style="height: 570px; overflow: hidden auto; border-top: solid #CD7070 2px;">
+					<th:block th:each="room : ${list}">
+					
+							<div style="border-bottom: solid 2px lightgray; padding-bottom: 20px; padding-top: 20px">
+							
+								<div class="col-3" style="text-align: center; padding-top: 10px; float: left;">
+								
+									<th:block data-th-if="${#strings.equals(loginId, room.person)}">
+										<div class="dropdown-toggle-split" data-bs-toggle="dropdown" style="cursor: pointer;">
+											<img th:src=@{${room.personPath}} style="width:40px;height:40px" class="rounded-circle" onerror="src='/img/noImg.png'">
+										</div>
+									
+	                                    	<ul class="dropdown-menu">
+		                                    	<li><a class="dropdown-item" th:href="@{/member/proFileDetail(id=${room.id})}">프로필</a></li>
+		                                        <li><a class="dropdown-item" th:href="@{/couple/applyCouple(id=${room.id})}">커플맺기신청</a></li>
+		                                        <li><a class="dropdown-item" th:href="@{/report(id=${room.id})}">신고하기</a></li>
+		                                        <li>
+		                                    		<a class="dropdown-item" th:href="@{/chat/roomDelete(roomNum=${room.roomNum})}" onclick="if(!confirm('정말로 채팅방을 나가시겠습니까? \n ( 삭제된 채팅 내용은 복구할 수 없습니다. )')){return false;}">채팅삭제</a>
+	                                       		</li>
+	                                    	</ul>
+								</th:block>
+								
+								<th:block data-th-if="${#strings.equals(loginId, room.id)}">								
+									<div class="dropdown-toggle-split" data-bs-toggle="dropdown" style="cursor: pointer;">
+										<img th:src=@{${room.idPath}} style="width:40px;height:40px" class="rounded-circle" onerror="src='/img/noImg.png'">
+									</div>
+									
+											<ul class="dropdown-menu">
+		                                    	<li><a class="dropdown-item" th:href="@{/member/proFileDetail(id=${room.person})}">프로필</a></li>
+		                                        <li><a class="dropdown-item" th:href="@{/couple/applyCouple(id=${room.person})}">커플맺기신청</a></li>
+		                                        <li><a class="dropdown-item" th:href="@{/report(id=${room.person})}">신고하기</a></li>
+	                                    		<li>
+		                                    		<a class="dropdown-item" th:href="@{/chat/roomDelete(roomNum=${room.roomNum})}" onclick="if(!confirm('정말로 채팅방을 나가시겠습니까? \n ( 삭제된 채팅 내용은 복구할 수 없습니다. )')){return false;}">채팅삭제</a>
+	                                       		</li>
+	                                    	</ul>
+								</th:block>
+								</div>
+								
+								<div class="col">
+								<th:block data-th-if="${#strings.equals(loginId, room.person)}">
+									<a th:href="@{/chat/room(roomNum=${room.roomNum})}">
+										<b>[[${room.id}]]</b>
+										<br/>
+										<span class="titleTarget">[[${room.lastMessage}]]</span>
+									</a>
+								</th:block>
+								
+								<th:block data-th-if="${#strings.equals(loginId, room.id)}">
+									<a th:href="@{/chat/room(roomNum=${room.roomNum})}">
+										<b>[[${room.person}]]</b>
+										<br/>
+										<span class="titleTarget">[[${room.lastMessage}]]</span>
+									</a>
+								</th:block>
+								</div>
+								
+							</div>
+							
+							
+						</th:block>
+				
+				</div>
+				
+			</div>
+			
+			<div class="col-9" style="height:100%">
+			
+				<!-- 상단(아이디표시) -->
+				<div class="row" style="border-bottom: solid #CD7070 2px; margin-top: 30px; margin-bottom: 15px; padding-bottom: 21px; padding-right:30px; font-weight: bold;">
+						<div class="btn-group dropstart justify-content-end">
+							<div class="dropdown-toggle-split" data-bs-toggle="dropdown" style="cursor: pointer;">
+								<h4 th:if="${room.person.toString().equals(loginId)}" th:text="${room.id}" id="receiver" th:attr="receiver=${room.id}" style="font-weight: bold;">아이디표시</h4>
+								<h4 th:unless="${room.person.toString().equals(loginId)}" th:text="${room.person}" id="receiver" th:attr="receiver=${room.person}" style="font-weight: bold;">아이디표시</h4>
+							</div>
+	                                   
+	                                    	<th:block th:if="${room.person.toString().equals(loginId)}">
+	                                    	 <ul class="dropdown-menu">
+		                                    	<li><a class="dropdown-item" th:href="@{/member/proFileDetail(id=${room.id})}">프로필</a></li>
+		                                        <li><a class="dropdown-item" th:href="@{/couple/applyCouple(id=${room.id})}">커플맺기신청</a></li>
+		                                        <li><a class="dropdown-item" th:href="@{/report(id=${room.id})}">신고하기</a></li>
+		                                        <li>
+		                                    		<a class="dropdown-item" th:href="@{/chat/roomDelete(roomNum=${room.roomNum})}" onclick="if(!confirm('정말로 채팅방을 나가시겠습니까? \n ( 삭제된 채팅 내용은 복구할 수 없습니다. )')){return false;}">채팅삭제</a>
+	                                       		</li>
+	                                    	</ul>
+	                                    	</th:block>
+	                                    	
+	                                    	<th:block th:unless="${room.person.toString().equals(loginId)}">
+	                                    	 <ul class="dropdown-menu">
+		                                    	<li><a class="dropdown-item" th:href="@{/member/proFileDetail(id=${room.person})}">프로필</a></li>
+		                                        <li><a class="dropdown-item" th:href="@{/couple/applyCouple(id=${room.person})}">커플맺기신청</a></li>
+		                                        <li><a class="dropdown-item" th:href="@{/report(id=${room.person})}">신고하기</a></li>
+	                                    		<li>
+		                                    		<a class="dropdown-item" th:href="@{/chat/roomDelete(roomNum=${room.roomNum})}" onclick="if(!confirm('정말로 채팅방을 나가시겠습니까? \n ( 삭제된 채팅 내용은 복구할 수 없습니다. )')){return false;}">채팅삭제</a>
+	                                       		</li>
+	                                    	</ul>	
+	                                    	</th:block>
+	                                         
+	                                    
+	                     </div>
+				</div>
+				
+					<!-- 중단(메세지표시) -->
+					<div th:attr="roomNum=${room.roomNum}, userId=${room.id}, loginId=${loginId}" id="msgArea" style="height: 540px; overflow: hidden auto;">
+						<th:block data-th-each="chat : ${chatDTO}">
+						
+							<div style="display: block">
+								<!-- 내가 보낸거는 오른쪽에 -->
+								<div th:if="${chat.id.toString().equals(loginId)}" class="d-flex flex-row-reverse">
+									<div class="alert alert-warning" th:text="${chat.message}"></div>
+									<div style="font-size:small; padding-top: 40px; margin-right: 5px;" th:text="${chat.dates}"></div>
+								</div>
+								<!-- 남이 보낸거는 왼쪽에 -->
+								<div th:unless="${chat.id.toString().equals(loginId)}" class="d-flex flex-row">
+									<div class="alert alert-secondary" th:text="${chat.message}"></div>
+									<div style="font-size:small; padding-top: 40px; margin-left: 5px;" th:text="${chat.dates}"></div>
+								</div>
+							</div>
+							
+						</th:block>
+						
+					</div>	
+					
+					<!-- 하단(메세지 작성) -->
+					<div class="row">
+						<div class="input-group mb-3">
+							<input type="text" id="msg" class="form-control rounded-0">
+							<div class="input-group-append">
+								<button class="ms-1 btn btn-danger rounded-0" type="button" id="button-send">전송</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+		</div>
+		
+		
+		 <!-- Modal -->
+			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="exampleModalLabel">ID 검색</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			       	<form th:action="@{/chat/roomCreate}" method="post">
+						상대방 ID 를 입력해 주세요<input type="text" id="searchId" name="person" class="form-control"  style="margin-bottom: 10px;"/>
+						<div id="suggestion_box" style="height:auto; overflow: hidden auto; border-bottom: solid 2px lightgray; border-left: solid 2px lightgray; border-right: solid 2px lightgray; visibility: inherit;"></div>
+						<button class="btn btn-secondary btn-create" style="float: right; margin-top: 5px">다음</button>
+					</form>
+			    </div>
+			  </div>
+			</div>
+		</div>
+	
+</div>
+
+</div>
+
+</div>
+
+		 <!-- 알람용 
+		<div class="toast-container position-fixed top-0 end-0 mb-3 me-3" id="alarmArea">
+		</div>
+-->
+
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+
+<script th:inline="javascript">
+//채팅방 생성
+$(".btn-create").on("click", function(e){
+		e.preventDefault();
+		var person = $("input[name='person']").val();
+			
+		if(person == ""){
+			alert("상대방 아이디를 입력해주세요!.");
+		}else{
+			$("form").submit();
+		}
+});
+
+//채팅방 삭제
+function chatDel(){
+	if(confirm("정말로 채팅방을 나가시겠습니까? (채팅내용은 복구할 수 없습니다.)") == true){
+		$("#chatDelForm").submit();
+	}else{
+		return false;
+	}
+}
+
+$(function() {
+	// <input>요소에 문자가 입력될 때마다 호출됨.
+	$("#searchId").keyup(function() {
+		$.ajax({	// Ajax 요청을 작성하고 GET 방식으로 전송함.
+			url: "/chat/searchId",
+			data: { "id": $(this).val() },
+			method: "GET",
+			success: function(map){
+				$("#suggestion_box").empty();
+				console.log(map.id);
+				for (var i = 0; i < map.id.length; i++) {
+					$("#suggestion_box").append('<div class="mt-2 ms-2"><a href="/chat/chatCon?person='+map.id[i]+'">'+map.id[i]+'</a></div>');
+				}
+			}
+		})	
+	})
+});
+		
+		
+ 			
+ 		//보냈을때 스크롤 맨 아래로
+		let msgArea = document.getElementById('msgArea');
+		msgArea.scrollTop = msgArea.scrollHeight;
+ 		
+ 		let roomNum = $("#msgArea").attr("roomNum");
+ 		let id = $("#msgArea").attr("userId");
+
+ 		let loginId = $("#msgArea").attr("loginId");
+
+ 		console.log(roomNum +" / "  + id + " / " + loginId);
+
+ 			var sockJs = new SockJS("/stomp/chat");
+ 			//1. SockJS 가 내부에 들고있는 stomp 를 내어줌
+ 			var stomp = Stomp.over(sockJs);
+ 			
+ 			//2. 커넥션이 맺어지면 실행
+ 			stomp.connect({}, function(e){
+ 				console.log("채팅용 STOMP Connection");
+ 				//console.log(e);		
+ 				//4. subscribe(path, callback) 으로 메세지 받을 수 있음
+ 				stomp.subscribe("/sub/chat/chatSelect/" + roomNum, function(chat){
+ 					//console.log("콜백함수를 보자!!:: ",chat);
+ 					var content = JSON.parse(chat.body);
+ 					//console.log(content)
+ 					var writer = content.id;
+ 					
+ 					var str = '';
+
+ 					let today = new Date();
+ 					let hours = today.getHours(); // 시
+ 					let minutes = today.getMinutes();  // 분
+ 					let seconds = today.getSeconds();  // 초
+ 					let currTime = hours + ':' + minutes + ':' + seconds;
+ 					
+ 					if(writer == loginId){ 
+ 						//내가 보내는 메세지
+ 					 	//str = "<div class='col-6'>";
+ 					 	str = "<div style='display: block'>";
+ 					 	str += "<div class='d-flex flex-row-reverse'>";
+ 						str += "<div class='alert alert-warning'>";
+ 						str += content.message + "</div>";
+ 						str += '<div style="font-size:small; padding-top: 40px; margin-right: 5px;">'+currTime+'</div>';
+ 						str += "</div></div>";
+ 						$("#msgArea").append(str);
+ 						
+ 						//보냈을때 스크롤 맨 아래로
+ 						let msgArea = document.getElementById('msgArea');
+ 	 					msgArea.scrollTop = msgArea.scrollHeight;
+ 					}else{
+ 						//상대방이 보내는 메세지
+ 						//str = "<div class='col-6'>";
+ 						str = "<div style='display: block'>";
+ 					 	str += "<div class='d-flex flex-row'>";
+ 						str += "<div class='alert alert-secondary'>";
+ 						str += content.message + "</div>";
+ 						str += '<div style="font-size:small; padding-top: 40px; margin-left: 5px;">'+currTime+'</div>';
+ 						str += "</div></div>";
+ 						$("#msgArea").append(str);
+ 						
+ 						//보냈을때 스크롤 맨 아래로
+ 						let msgArea = document.getElementById('msgArea');
+ 	 					msgArea.scrollTop = msgArea.scrollHeight;
+ 					}
+ 				
+ 				});
+ 				/*  
+ 				//3. send(path, header, message) 로 메세지를 보낼 수 있음
+ 				 stomp.send('/pub/chat/enter', {},JSON.stringify({roomNum: roomNum, id: loginId}))	
+ 				*/ 				
+ 			});
+ 			
+ 			
+ 			let receiver = $("#receiver").attr("receiver");
+ 			
+ 				//메시지 전송
+ 				$("#button-send").on("click",function(e){
+ 					var msg = document.getElementById("msg");
+				
+ 					if( (msg.value.length < 1000) && (msg.value.trim() != "") ) {
+ 					
+ 					let msgArea = document.getElementById('msgArea');
+ 					msgArea.scrollTop = msgArea.scrollHeight;
+ 					
+ 					console.log(loginId+ ":" + msg.value);
+ 					stomp.send('/pub/chat/message', {}, JSON.stringify({roomNum: roomNum, message: msg.value, id: loginId, receiver: receiver}));
+ 					msg.value='';
+ 					}else{
+ 						alert("공백은 보낼수 없으며, 1000자 이하로 입력해 주세요!");
+ 					}
+ 						
+ 				});
+ 				
+ 				//엔터키로 전송
+ 				$("#msg").on('keydown',function(key) {
+                if (key.keyCode == 13) {
+                	$("#button-send").click(); 					
+                }
+                
+                //모달용
+ 				var myModal = document.getElementById('myModal')
+ 		 		var myInput = document.getElementById('myInput')
+
+ 		 		myModal.addEventListener('shown.bs.modal', function () {
+ 		 		  myInput.focus();
+ 		 		})
+ 		 		
+	 		
+            });
+ 				
+ 		 
+
+ 								
+ 							
+ 							
+ 					
+
+ 		 		
+</script>
+
+</html>

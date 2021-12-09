@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+<div class="wrapper">
+    <th:block th:include="fix/fixSideBar"></th:block>
+    <div id="content">
+        <!-- 사이드바 토글 버튼 -->
+        <nav class="navbar-light my-2">
+            <button type="button" id="sidebarCollapse" class="btn btn-danger">
+                <i class="navbar-toggler-icon"></i>
+            </button>
+        </nav>
+       
+		<div class="container">
+		<div class="row">
+			
+			<div class="col">
+			<form th:action="@{/chat/room}" method="post">
+				방이름:<input type="text" name="roomName" class="form-control" />
+				상대방ID:<input type="text" name="person" class="form-control" />
+				<button class="btn btn-secondary btn-create">개설하기</button>
+			</form>
+			</div>
+			
+			<div class="col">
+				<ul th:each="room : ${list}">
+					<li><a th:href="@{/chat/room(roomNum=${room.roomNum}, roomName=${room.roomName})}">[[${room.roomName}]]</a></li>
+				</ul>
+			</div>
+			
+				
+		</div>
+		</div>
+		
+	</div>
+	</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script th:inline="javascript">
+
+ 		var roomName = [[${roomName}]];
+ 		
+ 		if(roomName != null){
+ 			alert(roomName + "방이 개설되었습니다.");
+ 		}
+ 		
+ 		
+ 		$(".btn-create").on("click", function(e){
+ 			e.preventDefault();
+ 			var name = $("input[name='roomName']").val();
+ 				
+ 			if(name == ""){
+ 				alert("채팅방 이름을 정해주세요!.");
+ 			}else{
+ 				$("form").submit();
+ 			}
+ 			
+ 		});
+ 		
+ 	
+</script>
+
+</html>

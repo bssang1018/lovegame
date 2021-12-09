@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+
+<body>
+<div class="wrapper">
+    <th:block th:include="fix/fixSideBar"></th:block>
+    <div id="content">
+        <!-- 사이드바 토글 버튼 -->
+        <nav class="navbar-light my-2">
+            <button type="button" id="sidebarCollapse" class="btn btn-danger">
+                <i class="navbar-toggler-icon"></i>
+            </button>
+        </nav>
+        <!-- 여기서 부터 내용 넣으세요 -->
+        <div class="mt-4">
+                    <h5 class="text-muted">추억과 일정을 기록하세요!</h5>
+                </div>
+        <div id='calendar' style="width: auto;"></div>
+        <form action="loveCalenderEnterForm" id="hidden" method="POST">
+        <input type='hidden' name="start" id="start"/>
+        <input type='hidden' name="end" id="end"/>
+        </form>
+    </div>
+</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<link href="/css/calendar.css" rel="stylesheet"/>
+<script>
+    $('#coupleMenuBtn').attr("aria-expanded", "true");
+    $('#coupleMenu').addClass("show");
+    $('#coupleMenu').children("li").eq(0).addClass("active");
+</script>
+<script>
+
+ document.addEventListener('DOMContentLoaded', function() {
+  var calendarEl = document.getElementById('calendar');
+
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    selectable: true,
+   headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,listMonth'
+            },
+            editable: false,
+            selectable: true,
+            locale: "ko",
+            droppable: false,
+            eventLimit: true,
+            dayMaxEvents: true,
+        eventLimitText: "more",
+          events:function(info, successCallback, failureCallback){
+            $.ajax({
+                  url:"readCalender",
+                   dataType: 'json',
+                   success: function(result) {
+ 	
+                           var events = [];
+                         
+                           if(result!=null){
+                                   $.each(result.list, function(index, element) {
+	//console.log(element.cnum);
+                                   var e=element.end;
+                                    if(e==null){
+                                        e=element.start;
+                                    }
+                                    if(element.color==null){
+                                    	element.color="#bb2d3b";
+                                    }
+                                    e = plus(e);
+                                    var s=element.start;
+                                        events.push({
+                                               title: element.title,
+                                               start: s,
+                                               end: e,
+                                               color :element.color,
+                                                 url: "/couple/CalenderDetail/"+element.cnum
+                                            }); //.push()
+                               }); //.each()
+                               
+                               console.log(events);
+                               
+                           }//if end                           
+                           successCallback(events);                               
+                       }//success: function end                          
+            }); //ajax end
+        },
+    select: function(info) {
+	let end = new Date(info.endStr);
+	end.setDate(end.getDate()-1);
+	let start = new Date(info.startStr);
+		$("#start").val(start);
+		$("#end").val(end);
+		//console.log($("#start").val());
+		//console.log($("#end").val());
+      if(confirm( format(start) + ' ~ ' + format(end)+' 일정을 등록하시겠습니까?')){
+		$("#hidden").submit();
+};
+    }
+  });
+  calendar.render();
+});
+//날짜 가공
+function format(date) {
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        month = month >= 10 ? month : '0' + month;
+        day = day >= 10 ? day : '0' + day;
+        return date.getFullYear() + '-' + month + '-' + day;
+}
+
+function plus(e){
+	let date = new Date(e);
+	let month = date.getMonth()+1;
+    let day = date.getDate()+1;
+    month = month >= 10 ? month : '0' + month;
+    day = day >= 10 ? day : '0' + day;
+    return date.getFullYear() + '-' + month + '-' + day;
+}
+
+
+
+/* function add(list){
+	
+	 for (var i = 0; i < list.length; i++) { 
+		console.log(list[i]);
+            }
+} */
+</script>
+</html>

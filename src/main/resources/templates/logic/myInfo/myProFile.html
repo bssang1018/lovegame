@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+<div class="wrapper">
+    <th:block th:include="fix/fixSideBar"></th:block>
+    <div id="content">
+        <th:block th:replace="fix/fixMyInfo"></th:block>
+        <!-- 여기서 부터 내용 넣으세요 -->
+        <div class="d-flex justify-content-center">
+            <form th:action="@{/myInfo/proFileInput}" class="w-75 bg-white" method="post"
+                  enctype="multipart/form-data" id="proFileInputForm">
+                <h3>내 프로필</h3>
+                <h6 class="text-muted">자세히 작성할수록 진짜 사랑을 찾기 쉬워요!</h6>
+                <div class="text-center mt-1">
+                    <th:block th:if="${dto ne null}">
+                        <img th:src="${dto.imgPath}"
+                             onerror="src='/img/noImg.png'"
+                             class="rounded-circle border img-fluid proFileImg"
+                             style="cursor: pointer;width: 400px;height: 400px">
+                    </th:block>
+                    <th:block th:if="${dto eq null}">
+                        <img th:src="@{/img/noImg.png}"
+                             onerror="src='/img/noImg.png'"
+                             class="rounded-circle border img-fluid proFileImg"
+                             style="cursor: pointer;width: 400px;height: 400px">
+                    </th:block>
+                </div>
+                <div id="emailHelp" class="form-text text-center">클릭해서 이미지를 등록하세요</div>
+                <input class="form-control" id="imgBtn" type="file" name="proFileImg" hidden>
+                <div class="mb-3" th:if="${dto eq null}">
+                    <label class="form-label">이름</label>
+                    <input type="text" class="form-control" name="name">
+                    <div class="form-text nameNum">0/100</div>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="mb-3" th:if="${dto ne null}">
+                    <label class="form-label">이름</label>
+                    <input th:value="${dto.name}" type="text" class="form-control" name="name">
+                    <div class="form-text nameNum">0/100</div>
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback"></div>
+                </div>
+                <div class="mb-3" th:if="${dto eq null}">
+                    <label class="form-label">나이</label>
+                    <input type="number" class="form-control" name="age" placeholder="필수 정보 입니다">
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback">숫자만 입력해주세요</div>
+                </div>
+                <div class="mb-3" th:if="${dto ne null}">
+                    <label class="form-label">나이</label>
+                    <input th:value="${dto.age}" type="number" class="form-control" name="age" placeholder="필수 정보 입니다">
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback">숫자만 입력해주세요</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">자기소개</label>
+                    <th:block th:if="${dto ne null}">
+                    <textarea th:text="${dto.intro}" class="form-control intro" name="intro" rows="9"
+                              style="resize: none"></textarea>
+                    </th:block>
+                    <th:block th:if="${dto eq null}">
+                        <textarea class="form-control intro" name="intro" rows="9"
+                                  style="resize: none"></textarea>
+                    </th:block>
+                    <div id="textareaNum" class="form-text">0/1000</div>
+                </div>
+                <!-- coupleid 여부로 창 보이기  -->
+                <div class="mt-2">
+                    <label class="form-label">My Love</label>
+                </div>
+
+                <th:block th:if="${map.get('chk') eq 'N'}">
+                 <div class="mt-2">
+                    <h5 class="text-muted">커플이 없습니다!   <a th:href="@{/couple/addCoupleIdForm}" class="btn btn-danger rounded-0 mt-1">커플계정추가</a></h5>
+       	    <p th:if="${map.get('history') eq 'Y'}" >예전 추억 게시물이 남아있습니다.<a th:href="@{/couple/history/1}" class="btn btn-danger rounded-0 mt-1">리스트</a></p>
+                </div>
+                </th:block>
+
+                 <th:block th:if="${map.get('chk') eq 'A'}">
+                 <div class="mt-2">
+                    <h5 class="text-muted">상대방의 응답을 기다리는 중입니다. <a th:href="@{/myInfo/cancelApply}" class="btn btn-danger rounded-0 mt-1">요청취소</a></h5>
+                </div>
+                </th:block>
+
+               <th:block th:if="${map.get('chk') eq 'R'}">
+                 <div class="mt-2">
+                    <h5 class="text-muted">커플 요청이 왔습니다.
+                    <a th:href="@{/myInfo/acceptApply}" class="btn btn-danger rounded-0 mt-1">수락</a>
+					<a th:href="@{/myInfo/cancelApply}" class="btn btn-danger rounded-0 mt-1">거절</a>
+               </h5>
+                </div>
+                </th:block>
+
+                <th:block th:if="${map.get('chk') eq 'Y'}">
+                 <div class="mt-2">
+                    <h5 class="text-muted" th:text="${map.get('couple')}"></h5>
+					<a id="cancel" class="btn btn-danger rounded-0 mt-1">커플해지</a>
+                </div>
+                </th:block>
+                
+                <!-- 끝 -->
+                <th:block th:if="${dto ne null}">
+                    <div th:if="${dto.hobby ne null}" class="mt-2">
+                        <label class="form-label">선택한 관심사</label>
+                    </div>
+                    <th:block th:each="hobby : ${#strings.arraySplit(dto.hobby,',')}">
+                        <button class="btn btn-danger rounded-0 my-1" th:text="${hobby}" disabled></button>
+                    </th:block>
+                </th:block>
+                <div class="mt-2">
+                    <label class="form-label">관심사</label>
+                </div>
+                <div class="mb-3">
+                    <input name="hobby" type="checkbox" id="btn1" class="btn-check" value="90년대 바이브">
+                    <label class="hobbyPickBtn" for="btn1">90년대 바이브</label>
+                    <input name="hobby" type="checkbox" id="btn2" class="btn-check" value="문화">
+                    <label class="hobbyPickBtn" for="btn2">문화</label>
+                    <input name="hobby" type="checkbox" id="btn3" class="btn-check" value="맛집">
+                    <label class="hobbyPickBtn" for="btn3">맛집</label>
+                    <input name="hobby" type="checkbox" id="btn4" class="btn-check" value="연극">
+                    <label class="hobbyPickBtn" for="btn4">연극</label>
+                    <input name="hobby" type="checkbox" id="btn5" class="btn-check" value="인스타그램">
+                    <label class="hobbyPickBtn" for="btn5">인스타그램</label>
+                    <input name="hobby" type="checkbox" id="btn6" class="btn-check" value="산책">
+                    <label class="hobbyPickBtn" for="btn6">산책</label>
+                    <input name="hobby" type="checkbox" id="btn7" class="btn-check" value="러닝">
+                    <label class="hobbyPickBtn" for="btn7">러닝</label>
+                    <input name="hobby" type="checkbox" id="btn8" class="btn-check" value="여행">
+                    <label class="hobbyPickBtn" for="btn8">여행</label>
+                    <input name="hobby" type="checkbox" id="btn9" class="btn-check" value="영화">
+                    <label class="hobbyPickBtn" for="btn9">영화</label>
+                    <input name="hobby" type="checkbox" id="btn10" class="btn-check" value="골프">
+                    <label class="hobbyPickBtn" for="btn10">골프</label>
+                    <input name="hobby" type="checkbox" id="btn11" class="btn-check" value="한국드라마">
+                    <label class="hobbyPickBtn" for="btn11">한국드라마</label>
+                    <input name="hobby" type="checkbox" id="btn13" class="btn-check" value="종이접기">
+                    <label class="hobbyPickBtn" for="btn13">종이접기</label>
+                    <input name="hobby" type="checkbox" id="btn14" class="btn-check" value="사진">
+                    <label class="hobbyPickBtn" for="btn14">사진</label>
+                    <input name="hobby" type="checkbox" id="btn15" class="btn-check" value="독서">
+                    <label class="hobbyPickBtn" for="btn15">독서</label>
+                    <input name="hobby" type="checkbox" id="btn16" class="btn-check" value="스포츠">
+                    <label class="hobbyPickBtn" for="btn16">스포츠</label>
+                    <input name="hobby" type="checkbox" id="btn17" class="btn-check" value="PC방">
+                    <label class="hobbyPickBtn" for="btn17">PC방</label>
+                    <input name="hobby" type="checkbox" id="btn18" class="btn-check" value="솔직한대화">
+                    <label class="hobbyPickBtn" for="btn18">솔직한대화</label>
+                    <input name="hobby" type="checkbox" id="btn19" class="btn-check" value="술 한 잔">
+                    <label class="hobbyPickBtn" for="btn19">술 한 잔</label>
+                    <input name="hobby" type="checkbox" id="btn20" class="btn-check" value="커피 한 잔">
+                    <label class="hobbyPickBtn" for="btn20">커피 한 잔</label>
+                    <input name="hobby" type="checkbox" id="btn21" class="btn-check" value="방탈출 카페">
+                    <label class="hobbyPickBtn" for="btn21">방탈출 카페</label>
+                    <input name="hobby" type="checkbox" id="btn22" class="btn-check" value="쇼핑">
+                    <label class="hobbyPickBtn" for="btn22">쇼핑</label>
+                    <input name="hobby" type="checkbox" id="btn23" class="btn-check" value="자연">
+                    <label class="hobbyPickBtn" for="btn23">자연</label>
+                    <input name="hobby" type="checkbox" id="btn24" class="btn-check" value="애니">
+                    <label class="hobbyPickBtn" for="btn24">애니</label>
+                    <input name="hobby" type="checkbox" id="btn26" class="btn-check" value="페스티벌">
+                    <label class="hobbyPickBtn" for="btn26">페스티벌</label>
+                    <input name="hobby" type="checkbox" id="btn27" class="btn-check" value="e스포츠">
+                    <label class="hobbyPickBtn" for="btn27">e스포츠</label>
+                    <input name="hobby" type="checkbox" id="btn28" class="btn-check" value="콘서트">
+                    <label class="hobbyPickBtn" for="btn28">콘서트</label>
+                    <input name="hobby" type="checkbox" id="btn29" class="btn-check" value="클라이밍">
+                    <label class="hobbyPickBtn" for="btn29">클라이밍</label>
+                    <input name="hobby" type="checkbox" id="btn30" class="btn-check" value="캠핑">
+                    <label class="hobbyPickBtn" for="btn30">캠핑</label>
+                    <input name="hobby" type="checkbox" id="btn31" class="btn-check" value="베이킹">
+                    <label class="hobbyPickBtn" for="btn31">베이킹</label>
+                    <input name="hobby" type="checkbox" id="btn32" class="btn-check" value="글쓰기">
+                    <label class="hobbyPickBtn" for="btn32">글쓰기</label>
+                    <input name="hobby" type="checkbox" id="btn33" class="btn-check" value="댄스">
+                    <label class="hobbyPickBtn" for="btn33">댄스</label>
+                    <input name="hobby" type="checkbox" id="btn34" class="btn-check" value="예술">
+                    <label class="hobbyPickBtn" for="btn34">예술</label>
+                    <input name="hobby" type="checkbox" id="btn35" class="btn-check" value="사이클링">
+                    <label class="hobbyPickBtn" for="btn35">사이클링</label>
+                    <input name="hobby" type="checkbox" id="btn36" class="btn-check" value="미술관">
+                    <label class="hobbyPickBtn" for="btn36">미술관</label>
+                    <input name="hobby" type="checkbox" id="btn37" class="btn-check" value="코미디">
+                    <label class="hobbyPickBtn" for="btn37">코미디</label>
+                    <input name="hobby" type="checkbox" id="btn38" class="btn-check" value="음악">
+                    <label class="hobbyPickBtn" for="btn38">음악</label>
+                    <input name="hobby" type="checkbox" id="btn39" class="btn-check" value="디즈니">
+                    <label class="hobbyPickBtn" for="btn39">디즈니</label>
+                    <input name="hobby" type="checkbox" id="btn40" class="btn-check" value="수제 맥주">
+                    <label class="hobbyPickBtn" for="btn40">수제 맥주</label>
+                    <input name="hobby" type="checkbox" id="btn41" class="btn-check" value="애견인">
+                    <label class="hobbyPickBtn" for="btn41">애견인</label>
+                    <input name="hobby" type="checkbox" id="btn42" class="btn-check" value="봉사활동">
+                    <label class="hobbyPickBtn" for="btn42">봉사활동</label>
+                    <input name="hobby" type="checkbox" id="btn43" class="btn-check" value="애묘인">
+                    <label class="hobbyPickBtn" for="btn43">애묘인</label>
+                    <input name="hobby" type="checkbox" id="btn44" class="btn-check" value="아웃도어 액티비티">
+                    <label class="hobbyPickBtn" for="btn44">아웃도어 액티비티</label>
+                    <input name="hobby" type="checkbox" id="btn45" class="btn-check" value="바">
+                    <label class="hobbyPickBtn" for="btn45">바</label>
+                    <input name="hobby" type="checkbox" id="btn46" class="btn-check" value="피트니스">
+                    <label class="hobbyPickBtn" for="btn46">피트니스</label>
+                    <input name="hobby" type="checkbox" id="btn47" class="btn-check" value="넷플릭스">
+                    <label class="hobbyPickBtn" for="btn47">넷플릭스</label>
+                    <input name="hobby" type="checkbox" id="btn48" class="btn-check" value="디저트">
+                    <label class="hobbyPickBtn" for="btn48">디저트</label>
+                    <input name="hobby" type="checkbox" id="btn49" class="btn-check" value="동네 산책">
+                    <label class="hobbyPickBtn" for="btn49">동네 산책</label>
+                </div>
+                <div class="text-center mt-3">
+                    <button id="proFileInputBtn" type="button" class="btn btn-danger rounded-0">프로필 등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script th:src="@{/js/proFile.js}"></script>
+<script>
+
+$("#cancel").on("click",function(){
+	if(confirm('정말 커플을 해지하시겟습니까?')){
+		 location.replace('/myInfo/cancelApply');
+	}else{
+
+	}
+});
+</script>
+</html>

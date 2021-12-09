@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+	<div class="wrapper">
+		<th:block th:include="fix/fixSideBar"></th:block>
+		<div id="content">
+			<!-- 사이드바 토글 버튼 -->
+			<nav class="navbar-light my-2">
+				<button type="button" id="sidebarCollapse" class="btn btn-danger">
+					<i class="navbar-toggler-icon"></i>
+				</button>
+			</nav>
+			<!-- 여기서 부터 내용 넣으세요 -->
+			<div class="d-flex justify-content-center ms-3 my-2">
+				<form method="get" class="row w-75" action="/couple/searchF">
+					<div class="col-md-8 m-0 p-0">
+						<input name="id" id="id" class="form-control rounded-0"
+							type="text" placeholder="커플계정을 검색하세요">
+							<div id="suggestion_box" class="border-dark"></div>
+					</div>
+					<div class="col-md m-0 p-0">
+						<button class="btn btn-danger rounded-0" type="submit">검색</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script>
+	$('#coupleMenuBtn').attr("aria-expanded", "true");
+	$('#coupleMenu').addClass("show");
+	$('#coupleMenu').children("li").eq(1).addClass("active");
+	
+	
+	
+		$(function() {
+			// <input>요소에 문자가 입력될 때마다 호출됨.
+			$("#id").keyup(function() {
+				$.ajax({	// Ajax 요청을 작성하고 GET 방식으로 전송함.
+					url: "/couple/search",
+					data: { "id": $(this).val() },
+					method: "GET",
+					success: function(map){
+						$("#suggestion_box").empty();
+						console.log(map.id);
+						for (var i = 0; i < map.id.length; i++) {
+							$("#suggestion_box").append('<div class="mt-2 ms-2"><a href="/couple/display/'+map.id[i]+'">'+map.id[i]+'</a></div>');
+						}
+					}
+				})	
+			})
+		});
+	</script>
+</html>

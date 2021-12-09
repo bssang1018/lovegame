@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- Sidebar  -->
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <a th:href="@{/main}">
+            <div class="d-inline-flex mt-2">
+                <img class="img-fluid" src="/img/love-icon.png" style="width: 45px;height: 45px">
+                <h3 class="ms-2 fw-bold text-white">Lovegame</h3>
+            </div>
+        </a>
+    </div>
+    <ul class="list-unstyled components">
+        <li>
+            <a id="coupleMenuBtn" href="#coupleMenu" data-bs-toggle="collapse">지금 사랑한다면</a>
+            <ul class="collapse list-unstyled" id="coupleMenu">
+                <li>
+                    <a th:href="@{/couple/loveCalender}">사랑일지</a>
+                </li>
+                <li>
+                    <a th:href="@{/couple/loveMemory/1}">추억나누기</a>
+                </li>
+                <li>
+                    <a th:href="@{/dateInfo/tourPick}">데이트정보</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a id="loveFindBtn" href="#loveFind" data-bs-toggle="collapse">사랑을 찾아서</a>
+            <ul class="collapse list-unstyled" id="loveFind">
+                <li>
+                    <a th:href="@{/matching/matchingMain}">인연찾기</a>
+                </li>
+                <li>
+                    <a th:href="@{/chat/rooms}">러브톡</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a id="loveBoardBtn" th:href="@{/loveBoard/list/all/1}">일상, 기록</a>
+        </li>
+    </ul>
+    <ul class="list-unstyled CTAs">
+    <th:block th:if ="${session.admin == 'Y'}">
+   	 <a  th:href="@{/admin/main}" class="btn btn-danger btn-sm rounded-0">관리자</a>
+    </th:block>
+        <a th:href="@{/myInfo/proFile}" class="btn btn-danger btn-sm rounded-0">내 프로필</a>
+        <a th:href="@{/member/logOut}" class="btn btn-danger btn-sm rounded-0">로그아웃</a>
+    </ul>
+</nav>
+</html>

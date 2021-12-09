@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+<body>
+<div class="wrapper">
+    <th:block th:include="fix/fixSideBar"></th:block>
+    <div id="content">
+        <th:block th:include="fix/fixMyInfo"></th:block>
+        <!-- 여기서 부터 내용 넣으세요 -->
+        <div class="container">
+            <div class="text-center my-2">
+                <a th:href="@{/myInfo/goodList(division='my')}"
+                   class="my-1 mx-1 btn btn-outline-danger rounded-0 btn-lg">
+                    내가 관심있는 사람</a>
+                <a th:href="@{/myInfo/goodList(division='yours')}" class="my-1 btn btn-outline-danger rounded-0 btn-lg">
+                    나에게 관심있는 사람</a>
+            </div>
+            <th:block th:if="${#arrays.length(list) > 0}">
+                <div class="row">
+                    <div th:each="list:${list}" class="col-lg-3 text-center mx-2 py-2">
+                        <a th:href="@{/member/proFileDetail(id=${list.id})}"
+                           class="testimonial-item mx-auto mb-5 mb-lg-0" style="cursor: pointer">
+                            <img class="img-fluid rounded-circle mb-3"
+                                 th:src="@{${list.imgPath}}"
+                                 onerror="src='/img/noImg.png'"
+                                 style="width: 200px;height: 200px">
+                            <h5 th:text="${list.id}"></h5>
+                            <h6 th:text="${list.name}"></h6>
+                            <p th:text="${list.intro}" class="mb-0 text-dark goodListTarget"></p>
+                        </a>
+                    </div>
+                </div>
+            </th:block>
+            <th:block th:if="${#arrays.length(list) <= 0}">
+                <p class="text-muted text-center">아직 관심이 없습니다!</p>
+            </th:block>
+        </div>
+    </div>
+</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+</html>

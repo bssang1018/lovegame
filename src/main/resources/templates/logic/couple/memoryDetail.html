@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<th:block th:include="fix/fixHead.html"></th:block>
+
+<body>
+	<div class="wrapper">
+		<th:block th:include="fix/fixSideBar"></th:block>
+		<div id="content">
+			<!-- 사이드바 토글 버튼 -->
+			<nav class="navbar-light my-2">
+				<button type="button" id="sidebarCollapse" class="btn btn-danger">
+					<i class="navbar-toggler-icon"></i>
+				</button>
+			</nav>
+			<!-- 여기서 부터 내용 넣으세요 -->
+			<div class="d-flex justify-content-center">
+				<div class="row mt-3">
+
+					<form class="row" method="POST" enctype="multipart/form-data">
+						<div class="col-md-6">
+							<label class="form-label">시작일정</label> <input type="date"
+								th:value="${map.get('start')}" class="form-control" name="start"
+								readonly>
+						</div>
+						<div class="col-md-6">
+							<label for="sTime" class="form-label">시간</label> <input
+								type="time" class="form-control" id="sTime" name="sTime"
+								th:value="${map.get('sTime')}" readonly>
+						</div>
+						<div class="invalid-feedback"></div>
+
+						<div class="col-md-6 mt-2">
+							<label class="form-label">마지막일정</label> <input type="date"
+								th:value="${map.get('end')}" class="form-control" name="end"
+								readonly>
+						</div>
+						<div class="col-md-6 mt-2">
+							<label for="eTime" class="form-label">시간</label> <input
+								type="time" class="form-control" id="eTime" name="eTime"
+								th:value="${map.get('eTime')}" readonly>
+						</div>
+						<div class="row mt-3 ">
+							<div class="mb-3">
+								<label for="title1" class="form-label"><h5>제목</h5></label>
+								<div class="input-group">
+									<input type="text" class="form-control" id="title1"
+										name="title" th:value="${map.get('title')}" readonly>
+									<span class="ps-2"> <input type="color"
+										class="form-control form-control-color" id="color"
+										name="color" th:value="${map.get('color')}" disabled></span>
+								</div>
+								<div id="titleNum" class="form-text">0/20</div>
+								<div class="valid-feedback"></div>
+								<div class="invalid-feedback"></div>
+							</div>
+							<div class="mb-3">
+								<label for="content" class="form-label">내용</label>
+								<textarea class="form-control" id="content1" rows="10"
+									style="resize: none" name="content"
+									th:text="${map.get('content')}" readonly></textarea>
+								<div id="contentNum" class="form-text">0/1000</div>
+								<div class="valid-feedback"></div>
+								<div class="invalid-feedback"></div>
+							</div>
+
+							<div class="mb-3">
+								<label class="form-label">이미지</label>
+								<div id="drop" class="border w-100"
+									style="height: 210px; padding: 3px">
+									<div id="imgText" style="z-index: -1"
+										class="h-100 w-100 d-flex flex-row align-items-center justify-content-center">
+										<th:block th:if="${map.get('photoList').size()>0}">
+											<th:block th:each="photo : ${map.get('photoList')}">
+												<div class="d-flex flex-column close ms-1" data-idx="' + idx + '"
+													style="cursor: pointer">
+													<div class="thumb">
+														<img style="width: 150px; height: 150px;"
+															class="img-fluid img-count" th:src="${photo.path}" />
+													</div>
+												</div>
+											</th:block>
+										</th:block>
+									</div>
+								</div>
+							</div>
+
+							<div class="text-center">
+								<a th:href="@{/couple/loveMemory/1}" class="btn btn-danger rounded-0">이전</a>
+								<a th:if="${map.get('writer')=='Y'}"
+									th:href="@{/couple/memoryUpdateForm/{Cnum}(Cnum=${map.get('Cnum')})}"
+									class="btn btn-danger rounded-0">수정</a>
+									<a th:if="${map.get('writer')=='Y'}"
+									th:href="@{/couple/memoryDel/{Cnum}(Cnum=${map.get('Cnum')})}"
+									class="btn btn-danger rounded-0">삭제</a>
+							</div>
+						</div>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<th:block th:replace="fix/fixFooter.html"></th:block>
+<script>
+	$('#coupleMenuBtn').attr("aria-expanded", "true");
+	$('#coupleMenu').addClass("show");
+	$('#coupleMenu').children("li").eq(0).addClass("active");
+	
+	$('#contentNum').text($("#content1").text().length + "/100");
+    $('#titleNum').text($("#title1").val().length + "/20");
+</script>
+</html>
